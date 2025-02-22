@@ -1,0 +1,81 @@
+/*
+This Kotlin Android Jetpack Compose app creates a simple UI where the user can:
+Enter their name into a TextField
+Click a Button labeled "Plz greet me"
+See a Snackbar (pop-up message) that displays "Hello <entered name>" at the bottom.
+The Scaffold component is used to structure the layout and manage the SnackbarHost.
+*/
+
+package com.example.practice2
+
+// Importing required Android and Jetpack Compose libraries
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.practice2.ui.theme.Practice2Theme
+import kotlinx.coroutines.launch // Required for coroutine-based Snackbar handling
+
+// MainActivity: Entry point of the application
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge() // Enables edge-to-edge UI rendering
+
+        setContent {
+            // Creating a Snackbar state to manage Snackbar messages
+            val snackbarHostState = remember { SnackbarHostState() }
+
+            // State variable to store user input from the TextField
+            var textFieldState by remember { mutableStateOf("") }
+
+            // Coroutine scope for launching Snackbar events
+            val scope = rememberCoroutineScope()
+
+            // Applying theme
+            Practice2Theme {
+                // Scaffold: Provides a basic layout structure
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    snackbarHost = { SnackbarHost(snackbarHostState) } // Manages Snackbar display
+                ) { innerPadding ->
+                    // Column: Arranges UI elements vertically
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally, // Centers horizontally
+                        verticalArrangement = Arrangement.Center, // Centers vertically
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 30.dp) // Adds horizontal padding
+                            .padding(innerPadding) // Ensures padding doesn't overlap with Snackbar
+                    ) {
+                        // TextField for user input
+                        TextField(
+                            value = textFieldState,
+                            onValueChange = { textFieldState = it }, // Updates state when user types
+                            label = { Text("Enter your name") }, // Placeholder label
+                            singleLine = true, // Ensures input is on a single line
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp)) // Adds vertical spacing
+
+                        // Button to trigger Snackbar greeting
+                        Button(onClick = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Hello $textFieldState") // Displays Snackbar with user input
+                            }
+                        }) {
+                            Text("Plz greet me") // Button label
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
