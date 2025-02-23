@@ -1,0 +1,61 @@
+/*
+This Kotlin Jetpack Compose code defines a simple Android app that uses LazyColumn
+to display a list of strings efficiently. The app follows a Composable UI approach.
+*/
+
+package com.example.practice2
+
+// Necessary Android and Jetpack Compose imports
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.practice2.ui.theme.Practice2Theme
+
+// MainActivity: Entry point of the Android application
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Enables Edge-to-Edge UI
+        enableEdgeToEdge()
+
+        // Setting up the Composable UI
+        setContent {
+            // Scroll state (Not used in LazyColumn, but kept in case needed)
+            val scrollState = rememberScrollState()
+
+            // LazyColumn for displaying a list efficiently
+            LazyColumn {
+                // itemsIndexed allows us to get both the index and value of each item
+                itemsIndexed(
+                    listOf("This", "is", "Jetpack", "Compose") // List of strings to display
+                ) { index, string ->
+                    // Each item in the LazyColumn
+                    Text(
+                        text = "Item: $string", // Displays the item text
+                        fontSize = 24.sp, // Sets the text size
+                        fontWeight = FontWeight.Bold, // Makes the text bold
+                        textAlign = TextAlign.Center, // Centers the text
+                        modifier = Modifier
+                            .fillMaxSize() // Expands the text to the max size
+                            .padding(vertical = 24.dp) // Adds padding
+                    )
+                }
+            }
+        }
+    }
+}
